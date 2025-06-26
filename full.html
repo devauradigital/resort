@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Experience luxury at Azure Sands Resort, a premier beachfront getaway with world-class amenities and stunning ocean views.">
+    <title>Azure Sands Resort | Luxury Beachfront Getaway</title>
+    <base target="_self">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@preline/preline@2.0.1/dist/preline.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#1e3a8a',
+                        accent: '#fbbf24',
+                        neutral: '#f3f4f6',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        main { flex: 1 0 auto; }
+        footer {
+            flex-shrink: 0;
+            background: #111827;
+            color: #e5e7eb;
+            padding: 2rem 0;
+        }
+        .page { min-height: calc(100vh - 80px); }
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            max-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .hero-slide.active { opacity: 1; }
+        .hero-overlay {
+            background: rgba(0, 0, 0, 0.6);
+            position: absolute;
+            inset: 0;
+        }
+        .gallery-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .room-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .room-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .service-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .service-card:hover .service-icon {
+            transform: scale(1.2);
+            color: #fbbf24;
+        }
+        .active-nav {
+            color: #fbbf24;
+            border-bottom: 3px solid #fbbf24;
+        }
+        .navbar {
+            transition: background 0.3s ease, backdrop-filter 0.3s ease, box-shadow 0.3s ease;
+            color: #e5e7eb;
+        }
+        .navbar-transparent {
+            background: rgba(17, 24, 39, 0.326);
+            backdrop-filter: none;
+            box-shadow: none;
+        }
+        .navbar-scrolled {
+            background: rgba(17, 24, 39, 0.537);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: slideIn 0.4s ease;
+        }
+        .modal-content.dark {
+            background: #1f2937;
+            color: #e5e7eb;
+        }
+        .modal-content.success { border: 3px solid #10b981; }
+        .modal-content.error { border: 3px solid #ef4444; }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #6b7280;
+            transition: color 0.2s ease;
+        }
+        .modal-close:hover { color: #111827; }
+        .modal-close.dark:hover { color: #f3f4f6; }
+        .sticky-cta {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            animation: slideUp 0.5s ease-in-out;
+        }
+        .fade-in { animation: fadeIn 1s ease-in-out; }
+        .testimonial-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        /* Mobile-specific fixes */
+        @media (max-width: 640px) {
+            .navbar {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            .navbar > .max-w-7xl {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                width: 100%;
+                max-width: none;
+            }
+            #mobileMenu {
+                width: 100%;
+                left: 0;
+                right: 0;
+                max-width: 100vw;
+                box-sizing: border-box;
+            }
+            .max-w-7xl {
+                max-width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .grid {
+                width: 100%;
+                overflow: hidden;
+            }
+            .gallery-item, .room-card, .testimonial-card {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .sticky-cta {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1.5rem;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-neutral dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <nav id="navbar" class="navbar fixed w-full z-50 navbar-transparent" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <a href="#home" class="flex items-center" onclick="navigate(event, 'home')" aria-label="Azure Sands Home">
+                        <i class="fas fa-umbrella-beach text-3xl text-accent mr-3"></i>
+                        <span class="text-2xl font-bold text-white">Azure Sands</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="#home" class="nav-link text-lg font-medium hover:text-accent transition duration-200 py-2" onclick="navigate(event, 'home')">Home</a>
+                    <a href="#about" class="nav-link text-lg font-medium hover:text-accent transition duration-200 py-2" onclick="navigate(event, 'about')">About</a>
+                    <a href="#gallery" class="nav-link text-lg font-medium hover:text-accent transition duration-200 py-2" onclick="navigate(event, 'gallery')">Gallery</a>
+                    <a href="#services" class="nav-link text-lg font-medium hover:text-accent transition duration-200 py-2" onclick="navigate(event, 'services')">Services</a>
+                    <a href="#booking" class="nav-link text-lg font-medium hover:text-accent transition duration-200 py-2" onclick="navigate(event, 'booking')">Booking</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon dark:hidden text-xl"></i>
+                        <i class="fas fa-sun hidden dark:inline text-xl"></i>
+                    </button>
+                    <button id="mobileMenuToggle" class="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200" aria-label="Toggle mobile menu">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-black dark:bg-gray-800 shadow-lg rounded-b-2xl" role="menu">
+            <div class="px-4 pt-4 pb-6 space-y-2">
+                <a href="#home" class="block px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200" onclick="navigate(event, 'home')" role="menuitem">Home</a>
+                <a href="#about" class="block px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigate(event, 'about')" role="menuitem">About</a>
+                <a href="#gallery" class="block px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigate(event, 'gallery')" role="menuitem">Gallery</a>
+                <a href="#services" class="block px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigate(event, 'services')" role="menuitem">Services</a>
+                <a href="#booking" class="block px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700" onclick="navigate(event, 'booking')" role="menuitem">Booking</a>
+                <button class="block w-full text-left px-4 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-700" onclick="toggleDarkMode()" role="menuitem">
+                    <span class="dark:hidden"><i class="fas fa-moon mr-2"></i>Dark Mode</span>
+                    <span class="hidden dark:inline"><i class="fas fa-sun mr-2"></i>Light Mode</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="alertModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+        <div id="modalContent" class="modal-content">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+            <h3 id="modalTitle" class="text-2xl font-bold mb-4"></h3>
+            <p id="modalMessage" class="text-gray-600 dark:text-gray-300 mb-6"></p>
+            <button onclick="closeModal()" class="bg-primary hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-300">Close</button>
+        </div>
+    </div>
+
+    <button id="stickyCta" class="sticky-cta bg-accent hover:bg-yellow-500 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105 hidden md:block" onclick="navigate(event, 'booking')">
+        Book Now <i class="fas fa-arrow-right ml-2"></i>
+    </button>
+
+    <main>
+        <section id="home" class="page pt-0">
+            <div class="hero">
+                <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')"></div>
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=1932&q=80')"></div>
+                <div class="hero-overlay"></div>
+                <div class="relative z-10 text-center text-white px-4 py-20 max-w-5xl mx-auto">
+                    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 animate-slide-up">Welcome to Azure Sands</h1>
+                    <p class="text-xl md:text-2xl mb-8 animate-slide-up animation-delay-200">Indulge in luxury with unparalleled ocean views and world-class amenities.</p>
+                    <div class="flex flex-wrap justify-center gap-4 animate-slide-up animation-delay-400">
+                        <button class="bg-accent hover:bg-yellow-500 text-white font-semibold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105" onclick="navigate(event, 'booking')">
+                            Book Now <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button class="bg-transparent border-2 border-white hover:bg-white/20 text-white font-semibold py-3 px-8 rounded-full transition duration-300 transform hover:scale-105" onclick="navigate(event, 'gallery')">
+                            View Gallery <i class="fas fa-images ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-4xl font-bold mb-4">Our Signature Rooms</h2>
+                    <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-lg">Discover comfort and elegance in our meticulously designed accommodations.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="room-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition duration-300">
+                        <img data-src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Deluxe Ocean View Room" class="w-full h-72 object-cover lazy" loading="lazy">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold mb-2">Deluxe Ocean View</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Spacious room with private balcony overlooking the ocean, featuring a king-size bed and premium amenities.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">$299/night</span>
+                                <button class="text-primary dark:text-white hover:text-accent font-semibold" onclick="navigate(event, 'booking')">
+                                    Book Now <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition duration-300">
+                        <img data-src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Premium Beachfront Suite" class="w-full h-72 object-cover lazy" loading="lazy">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold mb-2">Premium Beachfront Suite</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Luxurious suite with direct beach access, separate living area, and exclusive amenities.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">$499/night</span>
+                                <button class="text-primary dark:text-white hover:text-accent font-semibold" onclick="navigate(event, 'booking')">
+                                    Book Now <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-card bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition duration-300">
+                        <img data-src="https://cdn.pixabay.com/photo/2019/06/28/12/18/house-4304096_1280.jpg" alt="Presidential Villa" class="w-full h-72 object-cover lazy" loading="lazy">
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold mb-2">Presidential Villa</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Ultimate luxury with private pool, dedicated butler service, and panoramic ocean views.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xl font-bold text-accent">$999/night</span>
+                                <button class="text-primary dark:text-white hover:text-accent font-semibold" onclick="navigate(event, 'booking')">
+                                    Book Now <i class="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-primary dark:bg-gray-800 text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="md:flex items-center justify-between">
+                        <div class="md:w-1/2 mb-8 md:mb-0 fade-in">
+                            <h2 class="text-4xl font-bold mb-4">Exclusive Summer Escape</h2>
+                            <p class="text-lg mb-6">Book 5 nights or more and enjoy 20% off plus complimentary spa access and a sunset cruise.</p>
+                            <button class="bg-accent hover:bg-yellow-500 text-white font-semibold py-3 px-8 rounded-full transition duration-300" onclick="navigate(event, 'booking')">
+                                Claim Offer <i class="fas fa-gift ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="md:w-1/2 flex justify-center">
+                            <div class="relative">
+                                <div class="absolute -inset-4 bg-accent/30 rounded-full animate-pulse"></div>
+                                <div class="relative bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
+                                    <div class="text-center">
+                                        <div class="text-6xl font-extrabold mb-2">20% OFF</div>
+                                        <div class="text-2xl">Summer Escape</div>
+                                        <div class="text-sm mt-4">*Valid until August 31, 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-4xl font-bold mb-4">Guest Testimonials</h2>
+                    <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-lg">Hear from our delighted guests about their unforgettable experiences.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="testimonial-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg transition duration-300">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"An absolutely magical stay! The staff went above and beyond to make our anniversary special."</p>
+                        <div class="flex items-center">
+                            <img data-src="https://via.placeholder.com/50" alt="Guest avatar" class="w-12 h-12 rounded-full mr-4 lazy" loading="lazy">
+                            <div>
+                                <div class="font-semibold">Sarah & James</div>
+                                <div class="text-sm text-gray-500">New York, NY</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg transition duration-300">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"The ocean views and spa treatments were phenomenal. We can't wait to return!"</p>
+                        <div class="flex items-center">
+                            <img data-src="https://via.placeholder.com/50" alt="Guest avatar" class="w-12 h-12 rounded-full mr-4 lazy" loading="lazy">
+                            <div>
+                                <div class="font-semibold">Emily Chen</div>
+                                <div class="text-sm text-gray-500">San Francisco, CA</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg transition duration-300">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">"Perfect for our family vacation. The kids loved the water sports!"</p>
+                        <div class="flex items-center">
+                            <img data-src="https://via.placeholder.com/50" alt="Guest avatar" class="w-12 h-12 rounded-full mr-4 lazy" loading="lazy">
+                            <div>
+                                <div class="font-semibold">The Patel Family</div>
+                                <div class="text-sm text-gray-500">London, UK</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="page hidden pt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="flex flex-col md:flex-row items-center gap-12 fade-in">
+                    <div class="md:w-1/2">
+                        <img data-src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Azure Sands Resort exterior" class="rounded-2xl shadow-xl w-full h-auto lazy" loading="lazy">
+                    </div>
+                    <div class="md:w-1/2">
+                        <h2 class="text-4xl font-bold mb-6">Discover Azure Sands</h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Nestled along a pristine white-sand beach, Azure Sands Resort has been crafting unforgettable luxury experiences since 2005. Our dedication to excellence has earned us global recognition and loyal guests.</p>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">With 120 elegantly appointed rooms, three gourmet restaurants, a world-class spa, and diverse activities, we tailor every moment to your desires.</p>
+                        <div class="grid grid-cols-2 gap-6 mb-8">
+                            <div class="flex items-center">
+                                <i class="fas fa-umbrella-beach text-accent text-2xl mr-3"></i>
+                                <div>
+                                    <div class="font-bold">Private Beach</div>
+                                    <div class="text-sm text-gray-500">500m of pristine shoreline</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-concierge-bell text-accent text-2xl mr-3"></i>
+                                <div>
+                                    <div class="font-bold">24/7 Concierge</div>
+                                    <div class="text-sm text-gray-500">Personalized service</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-swimming-pool text-accent text-2xl mr-3"></i>
+                                <div>
+                                    <div class="font-bold">Infinity Pools</div>
+                                    <div class="text-sm text-gray-500">Three ocean-view pools</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-spa text-accent text-2xl mr-3"></i>
+                                <div>
+                                    <div class="font-bold">Luxury Spa</div>
+                                    <div class="text-sm text-gray-500">Award-winning treatments</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-full transition duration-300" onclick="navigate(event, 'services')">
+                            Explore Services <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-20">
+                    <h2 class="text-4xl font-bold mb-8 text-center">Our Accolades</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div class="flex flex-col items-center">
+                            <img data-src="https://res.cloudinary.com/enchanting/q_70,f_auto,c_fit,w_300,h_300/enchanting-web/2023/12/2023-WLTA-Winner-Logo.png" alt="Luxury Travel Award" class="h-20 w-20 object-contain mb-4 lazy" loading="lazy">
+                            <div class="text-center">
+                                <div class="font-bold">Luxury Travel Award</div>
+                                <div class="text-sm text-gray-500">2023 Winner</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <img data-src="https://png.pngtree.com/png-clipart/20250307/original/pngtree-green-gold-rosette-with-leaf-an-eco-friendly-award-png-image_20596289.png" alt="Green Hotel Certification" class="h-20 w-20 object-contain mb-4 lazy" loading="lazy">
+                            <div class="text-center">
+                                <div class="font-bold">Green Hotel</div>
+                                <div class="text-sm text-gray-500">Eco Certified</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <img data-src="https://hospitalitybizindia.com/wp-content/uploads/2023/05/TC_2023_L_YellowBackground-1.png" alt="TripAdvisor Award" class="h-20 w-20 object-contain mb-4 lazy" loading="lazy">
+                            <div class="text-center">
+                                <div class="font-bold">Travelers' Choice</div>
+                                <div class="text-sm text-gray-500">TripAdvisor 2023</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <img data-src="https://webbox.imgix.net/images/rvhymwpfbpclappj/de53aa30-5ba5-482f-9baf-dde42fdc7007.png" alt="World Luxury Award" class="h-20 w-20 object-contain mb-4 lazy" loading="lazy">
+                            <div class="text-center">
+                                <div class="font-bold">World Luxury</div>
+                                <div class="text-sm text-gray-500">Beach Resort 2022</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery" class="page hidden pt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-4xl font-bold mb-4">Explore Our Resort</h2>
+                    <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-lg">Immerse yourself in the beauty of Azure Sands through our curated gallery.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1540541338287-41700207dee6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Infinity Pool" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Infinity Pool</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=1932&q=80" alt="Private Beach" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Private Beach</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Oceanview Restaurant" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Oceanview Restaurant</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1931&q=80" alt="Luxury Spa" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Luxury Spa</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Deluxe Suite" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Deluxe Suite</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item overflow-hidden rounded-2xl shadow-lg relative group">
+                        <img data-src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80" alt="Wedding Venue" class="w-full h-72 object-cover transition duration-500 group-hover:scale-110 lazy" loading="lazy">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                            <span class="text-white font-bold text-lg">Wedding Venue</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12 text-center fade-in">
+                    <button class="bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center" onclick="navigate(event, 'booking')">
+                        Book Your Stay <i class="fas fa-calendar-check ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="page hidden pt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center mb-16 fade-in">
+                    <h3 class="text-4xl font-bold mb-4">Our Premium Services</h3>
+                    <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-lg">Indulge in luxury with our tailored services designed for your ultimate comfort.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-utensils"></i></div>
+                        <h4 class="text-xl font-bold mb-4">Gourmet Dining</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Savor world-class cuisine at our ocean-view restaurants, featuring locally sourced ingredients.</p>
+                    </div>
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-spa"></i></div>
+                        <h4 class="text-xl font-bold mb-4">Luxury Spa</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Rejuvenate with award-winning treatments in our serene oceanfront spa.</p>
+                    </div>
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-swimming-pool"></i></div>
+                        <h4 class="text-xl font-bold mb-4">Infinity Pools</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Relax in our stunning infinity pools with breathtaking ocean vistas.</p>
+                    </div>
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-swimmer"></i></div>
+                        <h4 class="text-xl font-bold mb-4">Water Sports</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Enjoy thrilling activities from snorkeling to jet skiing.</p>
+                    </div>
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-heart"></i></div>
+                        <h4 class="text-xl font-bold mb-4">Wedding Services</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Create your dream wedding with our dedicated event team.</p>
+                    </div>
+                    <div class="service-card bg-white dark:bg-gray-800 rounded-2xl p-8 text-center shadow-lg transition duration-300">
+                        <div class="service-icon text-5xl text-primary mb-4"><i class="fas fa-concierge-bell"></i></div>
+                        <h4 class="text-xl font-bold mb-4">24/7 Concierge</h4>
+                        <p class="text-gray-600 dark:text-gray-300">Personalized assistance to ensure a flawless stay.</p>
+                    </div>
+                </div>
+                <div class="mt-12 text-center fade-in">
+                    <button class="bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center" onclick="navigate(event, 'booking')">
+                        Book Your Stay <i class="fas fa-home ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="booking" class="page hidden pt-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center mb-16 fade-in">
+                    <h3 class="text-4xl font-bold mb-4">Plan Your Dream Vacation</h3>
+                    <p class="max-w-3xl mx-auto text-gray-600 dark:text-gray-300 text-lg">Reserve your stay at Azure Sands with our seamless booking process.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <form id="bookingForm" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-10" novalidate>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="checkIn" class="block text-sm font-medium mb-2">Check-In Date</label>
+                                    <input type="date" id="checkIn" name="checkIn" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required min="2025-06-26">
+                                </div>
+                                <div>
+                                    <label for="checkOut" class="block text-sm font-medium mb-2">Check-Out Date</label>
+                                    <input type="date" id="checkOut" name="checkOut" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required min="2025-06-27">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <label for="guests" class="block text-sm font-medium mb-2">Number of Guests</label>
+                                    <select id="guests" name="guests" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-300" required>
+                                        <option value="" disabled selected>Select number of guests</option>
+                                        <option value="1">1 Guest</option>
+                                        <option value="2">2 Guests</option>
+                                        <option value="3">3 Guests</option>
+                                        <option value="4">4 Guests</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="roomType" class="block text-sm font-medium mb-2">Room Type</label>
+                                    <select id="roomType" name="roomType" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-300" required>
+                                        <option value="" disabled selected>Select room type</option>
+                                        <option value="Deluxe">Deluxe Ocean View ($299/night)</option>
+                                        <option value="Premium">Premium Beachfront Suite ($499/night)</option>
+                                        <option value="Presidential">Presidential Villa ($999/night)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label for="email" class="block text-sm font-medium mb-2">Email Address</label>
+                                <input type="email" id="email" name="email" placeholder="your.email@example.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required>
+                            </div>
+                            <div class="mb-6">
+                                <label for="specialRequests" class="block text-sm font-medium mb-2">Special Requests</label>
+                                <textarea id="specialRequests" name="specialRequests" placeholder="E.g., extra pillows, late check-out" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" rows="4"></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">Check Availability <i class="fas fa-calendar-check ml-2"></i></button>
+                            </div>
+                        </form>
+                        <div id="paymentSection" class="hidden mt-12">
+                            <h3 class="text-3xl font-bold mb-6 text-center fade-in">Payment Details</h3>
+                            <form id="paymentForm" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-10" novalidate>
+                                <div class="mb-6">
+                                    <label for="cardNumber" class="block text-sm font-medium mb-2">Card Number</label>
+                                    <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required maxlength="19">
+                                </div>
+                                <div class="grid grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <label for="expiryDate" class="block text-sm font-medium mb-2">Expiry Date</label>
+                                        <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required>
+                                    </div>
+                                    <div>
+                                        <label for="cvv" class="block text-sm font-medium mb-2">CVV</label>
+                                        <input type="text" id="cvv" name="cvv" placeholder="123" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required maxlength="4">
+                                    </div>
+                                </div>
+                                <div class="mb-6">
+                                    <label for="cardHolder" class="block text-sm font-medium mb-2">Cardholder Name</label>
+                                    <input type="text" id="cardHolder" name="cardHolder" placeholder="Full Name" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="bg-accent hover:bg-yellow-500 text-white font-semibold py-3 px-8 rounded-lg transition duration-300">Confirm Payment <i class="fas fa-credit-card ml-2"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-10">
+                        <h3 class="text-2xl font-bold mb-6">Why Book With Us?</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <i class="fas fa-headset text-accent text-2xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold">24/7 Guest Support</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">Our dedicated team is available around the clock to assist with your needs.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-shield-alt text-accent text-2xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold">Secure Booking</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">Your personal and payment information is protected with industry-leading encryption.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-gift text-accent text-2xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold">Exclusive Perks</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">Enjoy complimentary upgrades and special offers when booking directly.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-undo-alt text-accent text-2xl mr-4 mt-1"></i>
+                                <div>
+                                    <h4 class="text-lg font-semibold">Flexible Cancellation</h4>
+                                    <p class="text-gray-600 dark:text-gray-300">Cancel or modify your booking up to 48 hours before arrival with no fees.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Need assistance? Contact our team:</p>
+                            <a href="tel:+18005551234" class="text-primary hover:text-accent font-semibold"><i class="fas fa-phone-alt mr-2"></i>+1 (800) 555-1234</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 dark:bg-gray-800 text-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                <div class="flex flex-col items-center md:items-start">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-umbrella-beach text-3xl text-accent mr-3"></i>
+                        <span class="text-2xl font-bold text-white">Azure Sands</span>
+                    </div>
+                    <p class="text-gray-400 text-center md:text-left mb-6">Discover luxury and tranquility at our beachfront resort, offering world-class amenities and personalized service.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-200" aria-label="Facebook"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-200" aria-label="Twitter"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-200" aria-label="Instagram"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-200" aria-label="LinkedIn"><i class="fab fa-linkedin-in text-xl"></i></a>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center md:items-start">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Contact Us</h4>
+                    <address class="not-italic text-gray-400 text-center md:text-left">
+                        <div class="flex items-start mb-3">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-accent"></i>
+                            <span>123 Ocean Boulevard<br>Miami Beach, FL 33139</span>
+                        </div>
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-phone-alt mr-3 text-accent"></i>
+                            <a href="tel:+18005551234" class="hover:text-accent transition duration-200">+1 (800) 555-1234</a>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-accent"></i>
+                            <a href="mailto:info@azuresands.com" class="hover:text-accent transition duration-200">info@azuresands.com</a>
+                        </div>
+                    </address>
+                </div>
+                <div class="flex flex-col items-center md:items-start">
+                    <h4 class="text-lg font-semibold mb-4 text-white">Newsletter</h4>
+                    <p class="text-gray-400 mb-4 text-center md:text-left">Subscribe for exclusive offers and updates.</p>
+                    <form id="newsletterForm" class="flex w-full max-w-md mx-auto md:mx-0" novalidate>
+                        <input type="email" id="newsletterEmail" placeholder="Your email" class="px-4 py-3 rounded-l-lg flex-1 text-gray-800 dark:text-gray-200 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary transition duration-200" required>
+                        <button type="submit" class="bg-accent hover:bg-yellow-500 px-4 py-3 rounded-r-lg transition duration-200" aria-label="Subscribe to newsletter">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+                <p class="text-sm text-gray-500 mb-4 sm:mb-0">© 2025 Azure Sands Resort. All rights reserved. Powered by <a href="https://devauradigital.com/"><b>DevAura Digital</b></a></p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-sm text-gray-400 hover:text-accent transition duration-200">Privacy Policy</a>
+                    <a href="#" class="text-sm text-gray-400 hover:text-accent transition duration-200">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation
+        function navigate(event, pageId) {
+            event.preventDefault();
+            document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active-nav'));
+                const targetLink = document.querySelector(`.nav-link[href="#${pageId}"]`);
+                if (targetLink) targetLink.classList.add('active-nav');
+                document.getElementById('mobileMenu').classList.add('hidden');
+                document.getElementById('mobileMenuToggle').setAttribute('aria-expanded', 'false');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                history.pushState(null, null, `#${pageId}`);
+                const stickyCta = document.getElementById('stickyCta');
+                stickyCta.style.display = pageId === 'booking' ? 'none' : 'block';
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+            const toggleButton = document.getElementById('mobileMenuToggle');
+            toggleButton.setAttribute('aria-expanded', !mobileMenu.classList.contains('hidden'));
+        }
+
+        // Dark mode
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter(e) {
+            e.preventDefault();
+            const email = document.getElementById('newsletterEmail').value;
+            if (/^\S+@\S+\.\S+$/.test(email)) {
+                showModal('Subscription Successful', 'Thank you for subscribing to our newsletter!', 'success');
+                document.getElementById('newsletterEmail').value = '';
+            } else {
+                showModal('Invalid Email', 'Please enter a valid email address.', 'error');
+            }
+        }
+
+        // Modal functions
+        function showModal(title, message, type) {
+            const modal = document.getElementById('alertModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalContent.classList.remove('success', 'error', 'dark');
+            modalContent.classList.add(type);
+            if (document.documentElement.classList.contains('dark')) modalContent.classList.add('dark');
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            modal.querySelector('button[aria-label="Close modal"]').focus();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('alertModal');
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        // Hero slideshow
+        function startHeroSlideshow() {
+            const slides = document.querySelectorAll('.hero-slide');
+            let current = 0;
+            setInterval(() => {
+                slides[current].classList.remove('active');
+                current = (current + 1) % slides.length;
+                slides[current].classList.add('active');
+            }, 5000);
+        }
+
+        // Form validation
+        function validateBookingForm(form) {
+            const checkIn = new Date(form.checkIn.value);
+            const checkOut = new Date(form.checkOut.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (!form.checkIn.value) return 'Please select a check-in date.';
+            if (!form.checkOut.value) return 'Please select a check-out date.';
+            if (isNaN(checkIn.getTime())) return 'Invalid check-in date.';
+            if (isNaN(checkOut.getTime())) return 'Invalid check-out date.';
+            if (checkIn < today) return 'Check-in date cannot be in the past.';
+            if (checkOut <= checkIn) return 'Check-out date must be after check-in date.';
+            if (!form.guests.value) return 'Please select the number of guests.';
+            if (!form.roomType.value) return 'Please select a room type.';
+            if (!/^\S+@\S+\.\S+$/.test(form.email.value)) return 'Please enter a valid email address.';
+            return null;
+        }
+
+        function validatePaymentForm(form) {
+            const cardNumber = form.cardNumber.value.replace(/\s/g, '');
+            if (!/^\d{16}$/.test(cardNumber)) return 'Please enter a valid 16-digit card number.';
+            if (!/^\d{2}\/\d{2}$/.test(form.expiryDate.value)) return 'Please enter a valid expiry date (MM/YY).';
+            if (!/^\d{3,4}$/.test(form.cvv.value)) return 'Please enter a valid CVV (3-4 digits).';
+            if (!form.cardHolder.value.trim()) return 'Please enter the cardholder name.';
+            return null;
+        }
+
+        // Mock payment API
+        function processPaymentMock(paymentDetails) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const error = validatePaymentForm({ 
+                        cardNumber: paymentDetails.cardNumber, 
+                        expiryDate: paymentDetails.expiryDate, 
+                        cvv: paymentDetails.cvv, 
+                        cardHolder: paymentDetails.cardHolder 
+                    });
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve({
+                            status: 'success',
+                            transactionId: 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                            message: 'Payment processed successfully'
+                        });
+                    }
+                }, 1000);
+            });
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.theme === 'dark' || (!localStorage.theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+            const hash = window.location.hash.substring(1) || 'home';
+            navigate(new Event('click'), hash);
+
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                
+                // Close mobile menu on scroll if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuToggle.setAttribute('aria-expanded', 'false');
+                }
+
+                // Navbar transparency toggle
+                if (window.scrollY > 50) {
+                    navbar.classList.remove('navbar-transparent');
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.add('navbar-transparent');
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+
+            document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('mobileMenuToggle').addEventListener('click', toggleMobileMenu);
+
+            const bookingForm = document.getElementById('bookingForm');
+            bookingForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const error = validateBookingForm(bookingForm);
+                if (error) {
+                    showModal('Form Error', error, 'error');
+                } else {
+                    document.getElementById('paymentSection').classList.remove('hidden');
+                    showModal('Availability Confirmed', 'Please enter your payment details to complete your booking.', 'success');
+                    bookingForm.querySelector('button[type="submit"]').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const paymentDetails = {
+                    cardNumber: document.getElementById('cardNumber').value,
+                    expiryDate: document.getElementById('expiryDate').value,
+                    cvv: document.getElementById('cvv').value,
+                    cardHolder: document.getElementById('cardHolder').value
+                };
+                try {
+                    const response = await processPaymentMock(paymentDetails);
+                    showModal('Booking Confirmed', `Thank you for your booking! Transaction ID: ${response.transactionId}`, 'success');
+                    paymentForm.reset();
+                    bookingForm.reset();
+                    document.getElementById('paymentSection').classList.add('hidden');
+                } catch (error) {
+                    showModal('Payment Error', error, 'error');
+                }
+            });
+
+            const newsletterForm = document.getElementById('newsletterForm');
+            newsletterForm.addEventListener('submit', subscribeNewsletter);
+
+            document.getElementById('cardNumber').addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.match(/.{1,4}/g)?.join(' ') || value;
+                e.target.value = value;
+            });
+
+            startHeroSlideshow();
+
+            const lazyImages = document.querySelectorAll('img.lazy');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
+                        }
+                    }
+                });
+            });
+            lazyImages.forEach(img => observer.observe(img));
+
+            document.getElementById('alertModal').addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+        });
+    </script>
+</body>
+</html>
